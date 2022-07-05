@@ -21,23 +21,25 @@ export class WorkflowCreatorInfo extends React.Component<WorkflowCreatorInfoProp
             const creatorInfoMap = new Map<string, string>([
                 ['Name', w.metadata.labels[labels.creator]],
                 ['Email', w.metadata.labels[labels.creatorEmail]],
-                ['Preferred user name', w.metadata.labels[labels.creatorPreferredUsername]]
+                ['Preferred username', w.metadata.labels[labels.creatorPreferredUsername]]
             ]);
-            creatorLabels.push(
-                Object.entries(creatorInfoMap).map(([key, value]) => (
-                    <div
-                        title={`List workflows created by ${key}=${value}`}
-                        className='tag'
-                        key={`${w.metadata.uid}-${key}`}
-                        onClick={async e => {
-                            e.preventDefault();
-                            this.props.onChange(key, value);
-                        }}>
-                        <div className='key'>{key}</div>
-                        <div className='value'>{value}</div>
-                    </div>
-                ))
-            );
+            creatorInfoMap.forEach((value: string, key: string) => {
+                if (value !== '' && value !== undefined) {
+                    creatorLabels.push(
+                        <div
+                            title={`List workflows created by ${key}=${value}`}
+                            className='tag'
+                            key={`${w.metadata.uid}-${key}`}
+                            onClick={async e => {
+                                e.preventDefault();
+                                this.props.onChange(key, value);
+                            }}>
+                            <div className='key'>{key}</div>
+                            <div className='value'>{value}</div>
+                        </div>
+                    );
+                }
+            });
         } else {
             creatorLabels.push(<div key={`${w.metadata.uid}- `}> No creator information </div>);
         }
